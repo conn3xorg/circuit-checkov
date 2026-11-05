@@ -86,6 +86,26 @@ jobs:
           done
           sudo podman exec circuit-checkov checkov --version
           conn3x plan -detailed-exitcode
+      # A fresh host gets the previous minor release from the lock in
+      # tests/upgrade, then the circuit's own pin is applied over it, the way
+      # someone moves to a new release of this circuit.
+      - name: Upgrade from checkov 3.3.30 on a fresh host, then plan again with no changes
+        working-directory: examples/local
+        env:
+          CONTAINERFILE: ${{ github.workspace }}/conn3x/test/images/${{ matrix.distro }}/Containerfile
+          PODMAN: sudo podman
+        run: |
+          ./down.sh
+          ./up.sh
+          conn3x init
+          conn3x apply -auto-approve -var checkov_version=3.3.30 -var requirements_file=../../tests/upgrade/checkov-3.3.30.txt
+          test "$(sudo podman exec circuit-checkov checkov --version)" = 3.3.30
+          conn3x apply -auto-approve
+          conn3x plan -detailed-exitcode
+          test "$(sudo podman exec circuit-checkov checkov --version)" = "$(conn3x output -raw checkov_version)"
+      - name: Check the upgraded checkov still reports CKV_AWS_24
+        working-directory: examples/local
+        run: sudo podman exec -i circuit-checkov sh < check.sh
       - name: Clean up
         if: always()
         working-directory: examples/local
