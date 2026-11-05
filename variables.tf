@@ -41,7 +41,8 @@ variable "ssh_become" {
 variable "checkov_version" {
   type        = string
   default     = "3.4.3"
-  description = "checkov release to install from PyPI. Its packages are pinned in requirements/checkov-<version>.txt, or in requirements_file."
+  nullable    = false
+  description = "checkov release to install from PyPI. Its packages are pinned in requirements/checkov-<version>.txt, or in requirements_file. Null means the default."
 
   validation {
     condition     = can(regex("^[0-9]+\\.[0-9]+\\.[0-9]+$", var.checkov_version))

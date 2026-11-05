@@ -8,7 +8,7 @@ It installs the tool and stops there. What you scan, and when, is up to you.
 
 ```hcl
 module "checkov" {
-  source = "github.com/conn3xorg/circuit-checkov?ref=v0.2.0"
+  source = "github.com/conn3xorg/circuit-checkov?ref=v0.2.1"
 
   hosts                = { ci = "203.0.113.10" }
   ssh_private_key_file = "~/.ssh/id_ed25519"
@@ -111,9 +111,11 @@ Requires Conn3x v0.7.0 or later. Hosts need to reach PyPI, `pypi.org` and `files
 
 Rocky Linux 10, Fedora 45, Ubuntu 24.04 and Debian 13, with checkov 3.4.3. [examples/local](examples/local) was applied to each in a container on arm64, and CI does the same on amd64. It checks that the second plan has no changes, plants a Terraform file with a security group open to `0.0.0.0/0` on port 22, and checks checkov exits 1 and reports `CKV_AWS_24` against `aws_security_group.ssh`. Then it narrows the group to `192.0.2.0/24` and checks the same check passes. After a restart of the container, `checkov --version` runs and the plan has no changes. On Ubuntu 24.04 and Debian 13, pip refused the lock with checkov's hash changed.
 
+Upgrades are tested the same way. CI starts a fresh host, applies checkov 3.3.30 from the lock in [tests/upgrade](tests/upgrade), then applies the circuit's own lock over it. The plan after has no changes, `checkov --version` prints 3.4.3, and the `CKV_AWS_24` check passes again. That also ran in a container on arm64 on Rocky Linux 10 and Debian 13.
+
 On an Ubuntu 24.04 droplet and a Rocky Linux 10 droplet with SELinux enforcing, both `s-1vcpu-1gb`, the circuit was applied to both hosts at once and the same check passed. After a reboot, checkov ran and the plan had no changes.
 
-Not run: Debian 13 or Fedora 45 on a real host, arm64 on a real host, a move to a new lock.
+Not run: Debian 13 or Fedora 45 on a real host, arm64 on a real host, an upgrade on a real host.
 
 ## License
 
