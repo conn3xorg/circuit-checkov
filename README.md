@@ -8,7 +8,7 @@ It installs the tool and stops there. What you scan, and when, is up to you.
 
 ```hcl
 module "checkov" {
-  source = "github.com/conn3xorg/circuit-checkov?ref=v0.1.0"
+  source = "github.com/conn3xorg/circuit-checkov?ref=v0.2.0"
 
   hosts                = { ci = "203.0.113.10" }
   ssh_private_key_file = "~/.ssh/id_ed25519"
@@ -74,7 +74,7 @@ hosts = {
 }
 ```
 
-`os` is one of `debian`, `ubuntu`, `rocky`, `almalinux`, `rhel`, `centos` or `fedora`. When the host can be read, the plan stops if `os` is wrong.
+`os` is one of `debian`, `ubuntu`, `rocky`, `almalinux`, `rhel` or `fedora`. When the host can be read, the plan stops if `os` is wrong.
 
 ### What it doesn't do
 
