@@ -45,6 +45,8 @@ checkov_version   = "3.4.3"
 requirements_file = "${path.root}/checkov-3.4.3.txt"
 ```
 
+The lock is copied to each host by a file step, so its contents, about 177 KB of package names, versions and hashes, are stored in Conn3x state. It holds no secrets.
+
 The plan stops when there's no lock for `checkov_version`, or the lock doesn't pin that version. A changed lock reinstalls the virtual environment from scratch.
 
 ## What it does
